@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import classes from './App.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
+import WithClass from '../hoc/WithClass';
 
-class App extends Component {
+class App extends PureComponent {
   constructor(props) {
     super(props);
     console.log('[App.js] Inside constructor', props);
@@ -25,10 +26,11 @@ class App extends Component {
     console.log('[App.js] Inside componentDidMount');
   }
 
-  shouldComponentUpdate(props, state) {
-    console.log('[UPDATE App.js] Inside shouldComponentUpdate', props, state);
-    return true;
-  }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   console.log('[UPDATE App.js] Inside shouldComponentUpdate', nextProps, nextState);
+  //   return nextState.persons !== this.state.persons ||
+  //     nextState.showPersons !== this.state.showPersons;
+  // }
 
   componentWillUpdate(props, state) {
     console.log('[UPDATE App.js] Inside componentWillUpdate', props, state);
@@ -78,14 +80,20 @@ class App extends Component {
     }
 
     return (
-      <div className={classes.App}>
+      <WithClass classes={classes.App}>
+        <button onClick={
+          () => {
+            this.setState({ showPersons: true });
+          }
+        }
+        >Show Persons</button>
         <Cockpit
           appTitle={this.props.title}
           showPersons={this.state.showPersons}
           persons={this.state.persons}
           clicked={this.togglePersonsHandler} />
         {persons}
-      </div>
+      </WithClass>
     );
   }
 }
