@@ -7,6 +7,7 @@ import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import axios from '../../axios-orders';
 import Spinner from '../../components/UI/Spinner/Spinner';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 const INGREDIENT_PRICES = {
   salad: 0.5,
@@ -17,16 +18,22 @@ const INGREDIENT_PRICES = {
 
 class BurgerBuilder extends Component {
   state = {
-    ingredients: {
-      salad: 0,
-      bacon: 0,
-      cheese: 0,
-      meat: 0
-    },
+    ingredients: null,
     totalPrice: 4,
     purchaseable: false,
     purchasing: false,
-    loading: false
+    loading: false,
+    error: null
+  }
+
+  componentDidMount() {
+    axios.get('https://react-my-burger-e73c3.firebaseio.com/ingredients.json')
+      .then(res => {
+        this.setState({ ingredients: res.data });
+      })
+      .catch(err => {
+        this.setState({ error: err });
+      });
   }
 
   updatePurchaseState(ingredients) {
@@ -121,11 +128,29 @@ class BurgerBuilder extends Component {
       disabledInfo[key] = disabledInfo[key] <= 0;
     }
 
-    let orderSummary = <OrderSummary
-      purchaseCancelled={this.purchaseCancelHandler}
-      purchaseContinued={this.purchaseContinueHandler}
-      ingredients={this.state.ingredients}
-      totalPrice={this.state.totalPrice} />;
+    let orderSummary = null;
+    let burger = this.state.error ? <p>Ingredients can't be loaded</p> : <Spinner />;
+
+    if (this.state.ingredients) {
+      burger = (
+        <Aux>
+          <Burger ingredients={this.state.ingredients}/>
+          <BuildControls
+            ingredientAdded={this.addIngredientHandler}
+            ingredientRemoved={this.removeIngredientHandler}
+            disabled={disabledInfo}
+            purchaseable={this.state.purchaseable}
+            purchasing={this.purchaseHandler}
+            price={this.state.totalPrice} />
+        </Aux>
+      );
+
+      orderSummary = <OrderSummary
+        purchaseCancelled={this.purchaseCancelHandler}
+        purchaseContinued={this.purchaseContinueHandler}
+        ingredients={this.state.ingredients}
+        totalPrice={this.state.totalPrice} />;
+    }
 
     if (this.state.loading) {
       orderSummary = <Spinner />;
@@ -138,17 +163,10 @@ class BurgerBuilder extends Component {
           modalClosed={this.purchaseCancelHandler}>
           {orderSummary}
         </Modal>
-        <Burger ingredients={this.state.ingredients}/>
-        <BuildControls
-          ingredientAdded={this.addIngredientHandler}
-          ingredientRemoved={this.removeIngredientHandler}
-          disabled={disabledInfo}
-          purchaseable={this.state.purchaseable}
-          purchasing={this.purchaseHandler}
-          price={this.state.totalPrice} />
+        {burger}
       </Aux>
     );
   }
 }
 
-export default BurgerBuilder;
+export default withErrorHandler(BurgerBuilder, axios);
