@@ -4,9 +4,7 @@ import AlertReducer from './alertReducer';
 import { SET_ALERT, REMOVE_ALERT } from '../types.js';
 
 const AlertState = props => {
-  const initialState = {
-    alert: null
-  };
+  const initialState = null;
 
   const [state, dispatch] = useReducer(AlertReducer, initialState);
 
@@ -17,17 +15,13 @@ const AlertState = props => {
       payload: { msg, type }
     });
 
-    setTimeout(() => {
-      dispatch({
-        type: REMOVE_ALERT
-      });
-    }, 5000);
+    setTimeout(() => dispatch({ type: REMOVE_ALERT }), 5000);
   };
 
   return (
     <AlertContext.Provider
       value={{
-        alert: state.alert,
+        alert: state,
         setAlert
       }}
     >
