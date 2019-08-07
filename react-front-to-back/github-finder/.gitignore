@@ -10,6 +10,8 @@
 
 # production
 /build
+/.netlify
+netlify.toml
 
 # misc
 .DS_Store
@@ -17,6 +19,10 @@
 .env.development.local
 .env.test.local
 .env.production.local
+.eslintrc.json
+yarn.lock
+package-lock.json
+.env.local
 
 npm-debug.log*
 yarn-debug.log*
