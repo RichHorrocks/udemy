@@ -12,6 +12,7 @@
 /build
 /.netlify
 netlify.toml
+/config/default.json
 
 # misc
 .DS_Store
