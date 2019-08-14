@@ -6,6 +6,10 @@ const app = express();
 // Connect database
 connectDB();
 
+// Initialise middleware.
+// This allows us to accept body data. Used to require BodyParser.
+app.use(express.json({ extended: false }));
+
 app.get('/', (req, res) =>
   res.json({ msg: 'Welcome to the Contact Keeper API' })
 );
