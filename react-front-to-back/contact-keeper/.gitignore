@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/client/node_modules
 /.pnp
 .pnp.js
 
@@ -13,6 +14,7 @@
 /.netlify
 netlify.toml
 /config/default.json
+/client/build
 
 # misc
 .DS_Store
