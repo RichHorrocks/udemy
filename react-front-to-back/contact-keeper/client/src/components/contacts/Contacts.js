@@ -4,7 +4,6 @@ import ContactItem from './ContactItem';
 
 const Contacts = () => {
   const contactContext = useContext(ContactContext);
-
   const { contacts } = contactContext;
 
   return (
