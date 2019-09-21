@@ -1,6 +1,5 @@
 import React, { useReducer } from 'react';
 import axios from 'axios';
-import uuid from 'uuid';
 import AuthContext from './authContext';
 import authReducer from './authReducer';
 import setAuthToken from '../../utils/setAuthToken';
@@ -92,6 +91,11 @@ const AuthState = props => {
   };
 
   // Log out User.
+  const logout = () => {
+    dispatch({
+      type: LOGOUT,
+    });
+  };
 
   // Clear Errors.
   const clearErrors = () => {
@@ -107,6 +111,7 @@ const AuthState = props => {
         register,
         clearErrors,
         login,
+        logout,
         token: state.token,
         isAuthenticated: state.isAuthenticated,
         loading: state.loading,
